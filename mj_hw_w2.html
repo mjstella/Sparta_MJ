@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+
+    <title>MJ_Homework_W1</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            font-family: 'Noto Serif KR', serif;
+        }
+
+        .wrap {
+            width: 50%;
+            margin: 50px auto 50px auto;
+        }
+
+        h1,
+        h5 {
+            display: inline;
+        }
+
+        .orders {
+            position: relative;
+            text-align: center;
+        }
+    </style>
+
+    <script>
+      function isCellPhone(p) {
+        var regExp = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})[-][0-9]{3,4}[-][0-9]{4}$/;
+        return regExp.test(p);
+      }
+
+      function order() {
+        let name = $('#order_name').val();
+        let count = $('#order_count').val();
+        let address = $('#order_address').val();
+        let phone = $('#order_phone').val();
+
+        if (name == ''){
+          alert('이름을 입력해주세요')
+          $('#order_name').focus()
+          return
+        } else if (count == ''){
+          alert('수량을 입력해주세요')
+          $('#order_count').focus()
+          return
+        } else if (address == ''){
+          alert('주소를 입력해주세요')
+          $('#order_address').focus()
+          return
+        } else if (phone == ''){
+          alert('휴대폰번호를 입력해주세요')
+          $('#order_phone').focus()
+          return
+        } else if (!isCellPhone(phone)) {
+          alert('휴대폰번호 입력 형식이 틀립니다. \n 010-0000-0000으로 입력해주세요')
+          return
+        }
+
+        $.ajax({
+          type: "POST",
+          url: "/order",
+          data: { name_give:name, count_give:count, address_give:address, phone_give:phone },
+          success: function(response){
+            if(response['result'] == 'success'){
+              alert('주문 완료!');
+              window.location.reload();
+            }
+          }
+        })
+      }
+
+      $(document).ready(function(){
+        $('#orders-box').empty();
+        set_exchange();
+        listing();
+      });
+
+      function set_exchange() {
+          $.ajax({
+              type: "GET",
+              url: "https://api.manana.kr/exchange/rate.json",
+              data: {},
+              success: function (response) {
+                  for (let i=0; i<response.length; i++) {
+                    if (response[i]['name'] == 'USDKRW=X') {
+                      $('#exchange').text(response[i]['rate']);
+                      return;
+                    }
+                  }
+
+              }
+          })
+      }
+
+    </script>
+
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="card mb-3">
+            <img class="card-img-top"
+                src="https://postfiles.pstatic.net/MjAxOTAyMDRfMTgy/MDAxNTQ5MjU5MTk0ODg3.AeWmPhyVsbUl-B4efumjLHKhzxVsMj94Jq3LmHrr2KEg.7A7Ss8kDDBwZEvKXQm1qOhhtmHAfr-rOTJA9_usbwvkg.JPEG.stella918/000033.JPG?type=w966"
+                alt="Card image cap">
+            <div class="card-body">
+                <h1>환상의 나라로 떠나보세요</h1>
+                <h5>가격 : 10,000,000/인</h5>
+                <p>일상에 지치셨나요? MJ 투어와 함께 환상의 나라로 떠나보세요. 당신이 원하는 그 어느 곳이든 갈 수 있습니다.</p>
+                <div class="info-temp">
+                    달러-원 환율:
+                    <span id="exchange"></span>
+                </div>
+                </div>
+                <div>
+                    <h3>주문하기</h3>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">주문자 성함</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="order_name" placeholder="">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputEmail3" class="col-sm-2 col-form-label">인원수</label>
+                        <div class="col-sm-10">
+                            <select class="custom-select" id="order_count">
+                                <option selected>--인원 수를 선택하세요</option>
+                                <option value="1">1명</option>
+                                <option value="2">2명</option>
+                                <option value="3">3명</option>
+                                <option value="4">4명</option>
+                                <option value="5">5명</option>
+                                <option value="6">6명</option>
+                                <option value="7">기타</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputPassword3" class="col-sm-2 col-form-label">주소</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="order_address" placeholder="">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">전화번호</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="order_phone" placeholder="">
+                    </div>
+                </div>
+                <div class="order">
+                    <button type="button" class="btn btn-primary" onclick="order()">주문하기</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
