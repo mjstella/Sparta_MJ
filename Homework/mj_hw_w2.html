@@ -43,76 +43,77 @@
             position: relative;
             text-align: center;
         }
+
+        .order-request {
+            width: 95%;
+            margin: 20px auto 20px auto;
+            position: relative;
+            text-align: center;
+        }
+
+        .info_temp {
+            color: blue;
+        }
     </style>
 
     <script>
-      function isCellPhone(p) {
-        var regExp = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})[-][0-9]{3,4}[-][0-9]{4}$/;
-        return regExp.test(p);
-      }
-
-      function order() {
-        let name = $('#order_name').val();
-        let count = $('#order_count').val();
-        let address = $('#order_address').val();
-        let phone = $('#order_phone').val();
-
-        if (name == ''){
-          alert('이름을 입력해주세요')
-          $('#order_name').focus()
-          return
-        } else if (count == ''){
-          alert('수량을 입력해주세요')
-          $('#order_count').focus()
-          return
-        } else if (address == ''){
-          alert('주소를 입력해주세요')
-          $('#order_address').focus()
-          return
-        } else if (phone == ''){
-          alert('휴대폰번호를 입력해주세요')
-          $('#order_phone').focus()
-          return
-        } else if (!isCellPhone(phone)) {
-          alert('휴대폰번호 입력 형식이 틀립니다. \n 010-0000-0000으로 입력해주세요')
-          return
+        function isCellPhone(p) {
+            var regExp = /^(01[016789]{1}|02|0[3-9]{1}[0-9]{1})[-][0-9]{3,4}[-][0-9]{4}$/;
+            return regExp.test(p);
         }
 
-        $.ajax({
-          type: "POST",
-          url: "/order",
-          data: { name_give:name, count_give:count, address_give:address, phone_give:phone },
-          success: function(response){
-            if(response['result'] == 'success'){
-              alert('주문 완료!');
-              window.location.reload();
+        function order() {
+            let name = $('#order_name').val();
+            let count = $('#order_count').val();
+            let address = $('#order_address').val();
+            let phone = $('#order_phone').val();
+
+            if (name == '') {
+                alert('이름을 입력해주세요')
+                $('#order_name').focus()
+                return
+            } else if (count == '') {
+                alert('수량을 입력해주세요')
+                $('#order_count').focus()
+                return
+            } else if (address == '') {
+                alert('주소를 입력해주세요')
+                $('#order_address').focus()
+                return
+            } else if (phone == '') {
+                alert('휴대폰번호를 입력해주세요')
+                $('#order_phone').focus()
+                return
+            } else if (!isCellPhone(phone)) {
+                alert('휴대폰번호 입력 형식이 틀립니다. \n 010-0000-0000으로 입력해주세요')
+                return
             }
-          }
-        })
-      }
+        }
 
-      $(document).ready(function(){
-        $('#orders-box').empty();
-        set_exchange();
-        listing();
-      });
+        $(document).ready(function () {
+            $('#orders-box').empty();
+            set_exchange();
+            listing();
+        });
 
-      function set_exchange() {
-          $.ajax({
-              type: "GET",
-              url: "https://api.manana.kr/exchange/rate.json",
-              data: {},
-              success: function (response) {
-                  for (let i=0; i<response.length; i++) {
-                    if (response[i]['name'] == 'USDKRW=X') {
-                      $('#exchange').text(response[i]['rate']);
-                      return;
+        function set_exchange() {
+            $.ajax({
+                type: "GET",
+                url: "https://api.manana.kr/exchange/rate.json",
+                data: {},
+                success: function (response) {
+                    for (let i = 0; i < response.length; i++) {
+                        if (response[i]['name'] == 'USDKRW=X') {
+                            $('#exchange').text(response[i]['rate']);
+                            return;
+                        }
                     }
-                  }
 
-              }
-          })
-      }
+                }
+            })
+        }
+
+
 
     </script>
 
@@ -132,31 +133,32 @@
                     달러-원 환율:
                     <span id="exchange"></span>
                 </div>
-                </div>
-                <div>
-                    <h3>주문하기</h3>
-                    <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">주문자 성함</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="order_name" placeholder="">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="inputEmail3" class="col-sm-2 col-form-label">인원수</label>
-                        <div class="col-sm-10">
-                            <select class="custom-select" id="order_count">
-                                <option selected>--인원 수를 선택하세요</option>
-                                <option value="1">1명</option>
-                                <option value="2">2명</option>
-                                <option value="3">3명</option>
-                                <option value="4">4명</option>
-                                <option value="5">5명</option>
-                                <option value="6">6명</option>
-                                <option value="7">기타</option>
-                            </select>
-                        </div>
+            </div>
+
+            <div class="order-request">
+                <h3>주문하기</h3>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">주문자 성함</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="order_name" placeholder="">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label for="inputEmail3" class="col-sm-2 col-form-label">인원수</label>
+                    <div class="col-sm-10">
+                        <select class="custom-select" id="order_count">
+                            <option selected>--인원 수를 선택하세요</option>
+                            <option value="1">1명</option>
+                            <option value="2">2명</option>
+                            <option value="3">3명</option>
+                            <option value="4">4명</option>
+                            <option value="5">5명</option>
+                            <option value="6">6명</option>
+                            <option value="7">기타</option>
+                        </select>
+                    </div>
+                </div>
+
                 <div class="form-group row">
                     <label for="inputPassword3" class="col-sm-2 col-form-label">주소</label>
                     <div class="col-sm-10">
@@ -172,6 +174,29 @@
                 <div class="order">
                     <button type="button" class="btn btn-primary" onclick="order()">주문하기</button>
                 </div>
+            </div>
+
+            <div class="orders">
+                <table class="table">
+                    <thead>
+                      <tr>
+                        <th scope="col">이름</th>
+                        <th scope="col">수량</th>
+                        <th scope="col">주소</th>
+                        <th scope="col">전화번호</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>ddd</td>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>@mdo</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+
 
             </div>
         </div>
