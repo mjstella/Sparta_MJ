@@ -51,10 +51,9 @@
             text-align: center;
         }
 
-        .info_temp {
+        .info-temp {
             color: blue;
         }
-        
     </style>
 
     <script>
@@ -69,42 +68,44 @@
             let address = $("#order_address").val();
             let phone = $("#order_phone").val();
 
-            if (name == ''){
+            if (name == '') {
                 alert('이름을 입력해주세요')
                 $('#order_name').focus()
                 return
-            } else if (count == ''){
-                alert('수량을 입력해주세요')
+            } else if (count == '') {
+                alert('인원 수를 입력해주세요')
                 $('#order_count').focus()
                 return
-            } else if (address == ''){
+            } else if (address == '') {
                 alert('주소를 입력해주세요')
                 $('#order_address').focus()
                 return
-            } else if (phone == ''){
+            } else if (phone == '') {
                 alert('휴대폰번호를 입력해주세요')
                 $('#order_phone').focus()
                 return
-            } else if (!isCellPhone(phone)){
+            } else if (!isCellPhone(phone)) {
                 alert('휴대폰번호 입력 형식이 틀립니다. \n 010-0000-0000으로 입력해주세요')
                 return
             }
-        }
 
-        $.ajax({
-            type: "POST",
-            url: "/orders",
-            data: { name_give: name,
+            $.ajax({
+                type: "POST",
+                url: "/orders",
+                data: {
+                    name_give: name,
                     count_give: count,
                     address_give: address,
-                    phone_give: phone },
-            success: function (response) {
-                if (response['result'] == 'success') {
-                    alert(response['msg']);
-                    window.location.reload();
+                    phone_give: phone
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg']);
+                        window.location.reload();
+                    }
                 }
-            }
-        })
+            })
+        }
 
         $(document).ready(function () {
             $('#orders-box').empty();
@@ -135,15 +136,15 @@
                 url: "/orders",
                 data: {},
                 success: function (response) {
-                 
+
                     if (response['result'] == 'success') {
                         let orders = response['orders'];
-                       
+
                         for (let i = 0; i < orders.length; i++) {
-                            make_card(orders[i]['name'], 
-                                      orders[i]['count'],
-                                      orders[i]['address'],
-                                      orders[i]['phone']);
+                            make_card(orders[i]['name'],
+                                orders[i]['count'],
+                                orders[i]['address'],
+                                orders[i]['phone']);
                         }
                     } else {
                         alert('주문을 받아오지 못했습니다');
@@ -229,7 +230,7 @@
                     <thead>
                         <tr>
                             <th scope="col">이름</th>
-                            <th scope="col">수량</th>
+                            <th scope="col">인원 수</th>
                             <th scope="col">주소</th>
                             <th scope="col">전화번호</th>
                         </tr>
